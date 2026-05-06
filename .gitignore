@@ -1,5 +1,4 @@
-*.class
 build/
+*.class
+dist/
 out/
-.idea/
-.vscode/
