@@ -6,110 +6,438 @@ import java.awt.event.*;
 
 public class AdminDashboard extends JFrame {
 
+    JLabel lblTrains;
+    JLabel lblBookings;
+    JLabel lblRevenue;
+    JLabel lblConfirmed;
+
     public AdminDashboard() {
 
         setTitle("Admin Dashboard");
+
         setSize(800, 500);
+
         setLocationRelativeTo(null);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 🔵 BACKGROUND
-        JPanel main = new JPanel(new GridBagLayout()) {
+        // 🔵 MAIN BACKGROUND
+        JPanel main = new JPanel(new BorderLayout()) {
+
             protected void paintComponent(Graphics g) {
+
                 super.paintComponent(g);
+
                 Graphics2D g2 = (Graphics2D) g;
 
                 GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(58, 123, 213),
-                        getWidth(), getHeight(), new Color(0, 210, 255)
+                        0,
+                        0,
+                        new Color(58, 123, 213),
+                        getWidth(),
+                        getHeight(),
+                        new Color(0, 210, 255)
                 );
 
                 g2.setPaint(gp);
+
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
         };
 
         add(main);
 
-        // ⚪ CARD
-        JPanel card = new JPanel();
-        card.setPreferredSize(new Dimension(350, 300));
-        card.setBackground(Color.WHITE);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
-
-        main.add(card);
-
         // 🔹 TITLE
-        JLabel title = new JLabel("Admin Panel");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JLabel title = new JLabel("Admin Dashboard", SwingConstants.CENTER);
 
-        // 🔹 BUTTON STYLE
-        Dimension btnSize = new Dimension(250, 40);
+        title.setFont(new Font("Segoe UI", Font.BOLD, 28));
 
-        JButton btnAddTrain = new JButton("Add Train");
-        JButton btnViewBookings = new JButton("View Bookings");
-        JButton btnDeleteTrain = new JButton("Delete Train");
-        JButton btnLogout = new JButton("Logout");
+        title.setForeground(Color.WHITE);
 
-        JButton[] buttons = {btnAddTrain, btnViewBookings, btnDeleteTrain, btnLogout};
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
 
-        for (JButton btn : buttons) {
-            btn.setMaximumSize(btnSize);
-            btn.setAlignmentX(Component.CENTER_ALIGNMENT);
-            btn.setBackground(new Color(37, 99, 235));
-            btn.setForeground(Color.WHITE);
-            btn.setFocusPainted(false);
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            btn.setOpaque(true);
-            btn.setContentAreaFilled(true);
-            btn.setBorderPainted(false);
+        main.add(title, BorderLayout.NORTH);
+
+        // 🔥 CENTER PANEL
+        JPanel centerPanel = new JPanel();
+
+        centerPanel.setOpaque(false);
+
+        centerPanel.setLayout(new BorderLayout());
+
+        main.add(centerPanel, BorderLayout.CENTER);
+
+        // 🔥 STATS PANEL
+        JPanel statsPanel = new JPanel(new GridLayout(2, 2, 20, 20));
+
+        statsPanel.setOpaque(false);
+
+        statsPanel.setBorder(
+                BorderFactory.createEmptyBorder(
+                        10,
+                        30,
+                        10,
+                        30
+                )
+        );
+
+        // ✅ CARDS
+        JPanel trainsCard = createCard("Total Trains", "0");
+
+        JPanel bookingsCard = createCard("Total Bookings", "0");
+
+        JPanel revenueCard = createCard("Revenue", "₹0");
+
+        JPanel confirmedCard = createCard("Confirmed Tickets", "0");
+
+        lblTrains = (JLabel) trainsCard.getComponent(3);
+
+        lblBookings = (JLabel) bookingsCard.getComponent(3);
+
+        lblRevenue = (JLabel) revenueCard.getComponent(3);
+
+        lblConfirmed = (JLabel) confirmedCard.getComponent(3);
+
+        statsPanel.add(trainsCard);
+
+        statsPanel.add(bookingsCard);
+
+        statsPanel.add(revenueCard);
+
+        statsPanel.add(confirmedCard);
+
+        centerPanel.add(statsPanel, BorderLayout.CENTER);
+
+        // 🔥 BUTTON PANEL
+        JPanel buttonPanel = new JPanel();
+
+        buttonPanel.setOpaque(false);
+
+        buttonPanel.setBorder(
+                BorderFactory.createEmptyBorder(
+                        20,
+                        20,
+                        20,
+                        20
+                )
+        );
+
+        buttonPanel.setLayout(
+                new FlowLayout(
+                        FlowLayout.CENTER,
+                        20,
+                        10
+                )
+        );
+
+        JButton btnAddTrain = createButton("Add Train");
+
+        JButton btnRemoveTrain = createButton("Remove Train");
+
+        JButton btnViewBookings = createButton("View Bookings");
+
+        JButton btnLogout = createButton("Logout");
+
+        buttonPanel.add(btnAddTrain);
+
+        buttonPanel.add(btnRemoveTrain);
+
+        buttonPanel.add(btnViewBookings);
+
+        buttonPanel.add(btnLogout);
+
+        centerPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        // 🔥 LOAD STATS
+        loadStatistics();
+
+        // 🔹 ADD TRAIN
+        btnAddTrain.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+
+                        new AddTrainPage().setVisible(true);
+
+                        dispose();
+                    }
+                }
+        );
+
+        // 🔹 REMOVE TRAIN
+        btnRemoveTrain.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+
+                        new RemoveTrainPage()
+                                .setVisible(true);
+
+                        dispose();
+                    }
+                }
+        );
+
+        // 🔹 VIEW BOOKINGS
+        btnViewBookings.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+
+                        new AdminViewBookings().setVisible(true);
+
+                        dispose();
+                    }
+                }
+        );
+
+        // 🔹 LOGOUT
+        btnLogout.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(ActionEvent e) {
+
+                        new LoginPage().setVisible(true);
+
+                        dispose();
+                    }
+                }
+        );
+    }
+
+    // 🔥 CREATE CARD
+    JPanel createCard(String title, String value) {
+
+        JPanel card = new JPanel();
+
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+
+        // 🔥 BRIGHT CARD COLOR
+        card.setBackground(new Color(255, 255, 255));
+
+        card.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(180, 210, 255),
+                                2,
+                                true
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                25,
+                                25,
+                                25,
+                                25
+                        )
+                )
+        );
+
+        JLabel lblTitle = new JLabel(title);
+
+        lblTitle.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        18
+                )
+        );
+
+        lblTitle.setForeground(
+                new Color(60, 60, 60)
+        );
+
+        lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel lblValue = new JLabel(value);
+
+        lblValue.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        34
+                )
+        );
+
+        // 🔥 BRIGHT BLUE VALUE
+        lblValue.setForeground(
+                new Color(0, 102, 255)
+        );
+
+        lblValue.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        card.add(Box.createVerticalGlue());
+
+        card.add(lblTitle);
+
+        card.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        card.add(lblValue);
+
+        card.add(Box.createVerticalGlue());
+
+        // 🔥 BRIGHT HOVER EFFECT
+        card.addMouseListener(
+                new MouseAdapter() {
+
+                    public void mouseEntered(MouseEvent e) {
+
+                        card.setBackground(
+                                new Color(225, 240, 255)
+                        );
+
+                        card.setBorder(
+                                BorderFactory.createCompoundBorder(
+                                        BorderFactory.createLineBorder(
+                                                new Color(0, 102, 255),
+                                                3,
+                                                true
+                                        ),
+                                        BorderFactory.createEmptyBorder(
+                                                25,
+                                                25,
+                                                25,
+                                                25
+                                        )
+                                )
+                        );
+                    }
+
+                    public void mouseExited(MouseEvent e) {
+
+                        card.setBackground(Color.WHITE);
+
+                        card.setBorder(
+                                BorderFactory.createCompoundBorder(
+                                        BorderFactory.createLineBorder(
+                                                new Color(180, 210, 255),
+                                                2,
+                                                true
+                                        ),
+                                        BorderFactory.createEmptyBorder(
+                                                25,
+                                                25,
+                                                25,
+                                                25
+                                        )
+                                )
+                        );
+                    }
+                }
+        );
+
+        return card;
+    }
+
+    // 🔥 CREATE BUTTON
+    JButton createButton(String text) {
+
+        JButton btn = new JButton(text);
+
+        btn.setPreferredSize(
+                new Dimension(170, 45)
+        );
+
+        btn.setBackground(
+                new Color(37, 99, 235)
+        );
+
+        btn.setForeground(Color.WHITE);
+
+        btn.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        15
+                )
+        );
+
+        btn.setFocusPainted(false);
+
+        btn.setOpaque(true);
+
+        btn.setContentAreaFilled(true);
+
+        btn.setBorderPainted(false);
+
+        return btn;
+    }
+
+    // 🔥 LOAD DATABASE STATS
+    void loadStatistics() {
+
+        try {
+
+            java.sql.Connection con =
+                    DBConnection.getConnection();
+
+            // ✅ TOTAL TRAINS
+            java.sql.PreparedStatement ps1 =
+                    con.prepareStatement(
+                            "SELECT COUNT(*) FROM trains"
+                    );
+
+            java.sql.ResultSet rs1 =
+                    ps1.executeQuery();
+
+            if (rs1.next()) {
+
+                lblTrains.setText(
+                        rs1.getString(1)
+                );
+            }
+
+            // ✅ TOTAL BOOKINGS
+            java.sql.PreparedStatement ps2 =
+                    con.prepareStatement(
+                            "SELECT COUNT(*) FROM bookings"
+                    );
+
+            java.sql.ResultSet rs2 =
+                    ps2.executeQuery();
+
+            if (rs2.next()) {
+
+                lblBookings.setText(
+                        rs2.getString(1)
+                );
+            }
+
+            // ✅ CONFIRMED BOOKINGS
+            java.sql.PreparedStatement ps3 =
+                    con.prepareStatement(
+                            "SELECT COUNT(*) FROM bookings WHERE status='Confirmed'"
+                    );
+
+            java.sql.ResultSet rs3 =
+                    ps3.executeQuery();
+
+            if (rs3.next()) {
+
+                lblConfirmed.setText(
+                        rs3.getString(1)
+                );
+            }
+
+            // ✅ SIMPLE REVENUE
+            java.sql.PreparedStatement ps4 =
+                    con.prepareStatement(
+                            "SELECT SUM(price) FROM trains"
+                    );
+
+            java.sql.ResultSet rs4 =
+                    ps4.executeQuery();
+
+            if (rs4.next()) {
+
+                int revenue = rs4.getInt(1);
+
+                lblRevenue.setText(
+                        "₹" + revenue
+                );
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(e);
         }
-
-        // 📦 ADD COMPONENTS
-        card.add(title);
-        card.add(Box.createRigidArea(new Dimension(0, 25)));
-
-        card.add(btnAddTrain);
-        card.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        card.add(btnViewBookings);
-        card.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        card.add(btnDeleteTrain);
-        card.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        card.add(btnLogout);
-
-        // 🔥 ACTIONS
-
-        btnAddTrain.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new AddTrainPage().setVisible(true);
-                dispose();
-            }
-        });
-
-        btnViewBookings.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new AdminViewBookings().setVisible(true);
-                dispose();
-            }
-        });
-
-        btnDeleteTrain.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new DeleteTrainPage().setVisible(true);
-                dispose();
-            }
-        });
-
-        btnLogout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new LoginPage().setVisible(true);
-                dispose();
-            }
-        });
     }
 }

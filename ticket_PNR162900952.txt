@@ -1,0 +1,11 @@
+========== RAILWAY TICKET ==========
+
+PNR: PNR162900952
+Passenger: thaneshwar
+Train: Garib Rath
+Category: AC (05:00 AM)
+Journey Date: Today
+Seats: A1,
+Status: Confirmed
+
+===================================

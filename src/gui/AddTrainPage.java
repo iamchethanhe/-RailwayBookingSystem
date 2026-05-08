@@ -9,23 +9,39 @@ public class AddTrainPage extends JFrame {
     public AddTrainPage() {
 
         setTitle("Add Train");
+
         setSize(800, 500);
+
         setLocationRelativeTo(null);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 🔵 BACKGROUND
         JPanel main = new JPanel(new GridBagLayout()) {
+
             protected void paintComponent(Graphics g) {
+
                 super.paintComponent(g);
+
                 Graphics2D g2 = (Graphics2D) g;
 
                 GradientPaint gp = new GradientPaint(
-                        0, 0, new Color(58, 123, 213),
-                        getWidth(), getHeight(), new Color(0, 210, 255)
+                        0,
+                        0,
+                        new Color(58, 123, 213),
+                        getWidth(),
+                        getHeight(),
+                        new Color(0, 210, 255)
                 );
 
                 g2.setPaint(gp);
-                g2.fillRect(0, 0, getWidth(), getHeight());
+
+                g2.fillRect(
+                        0,
+                        0,
+                        getWidth(),
+                        getHeight()
+                );
             }
         };
 
@@ -33,136 +49,323 @@ public class AddTrainPage extends JFrame {
 
         // ⚪ CARD PANEL
         JPanel card = new JPanel(new GridBagLayout());
-        card.setPreferredSize(new Dimension(450, 380));
+
+        card.setPreferredSize(
+                new Dimension(420, 420)
+        );
+
         card.setBackground(Color.WHITE);
-        card.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 
-        main.add(card);
+        card.setBorder(
+                BorderFactory.createEmptyBorder(
+                        20,
+                        30,
+                        20,
+                        30
+                )
+        );
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        GridBagConstraints gbc =
+                new GridBagConstraints();
+
+        gbc.insets =
+                new Insets(8, 0, 8, 0);
+
+        gbc.fill =
+                GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+
+        gbc.weightx = 1;
 
         // 🔹 TITLE
-        JLabel title = new JLabel("Add Train", SwingConstants.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        JLabel title =
+                new JLabel(
+                        "Add Train",
+                        SwingConstants.CENTER
+                );
 
-        gbc.gridx = 0;
+        title.setFont(
+                new Font(
+                        "Segoe UI",
+                        Font.BOLD,
+                        22
+                )
+        );
+
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+
         card.add(title, gbc);
 
-        gbc.gridwidth = 1;
+        // 🔹 TRAIN NAME
+        JLabel lblName =
+                new JLabel("Train Name");
 
-        // 🔹 TEXT FIELDS
-        JTextField txtName = new JTextField(15);
-        JTextField txtSource = new JTextField(15);
-        JTextField txtDest = new JTextField(15);
-        JTextField txtPrice = new JTextField(15);
-        JTextField txtTime = new JTextField(15);
+        gbc.gridy = 1;
 
-        // 👉 Helper method
-        addRow(card, gbc, 1, "Train Name", txtName);
-        addRow(card, gbc, 2, "Source", txtSource);
-        addRow(card, gbc, 3, "Destination", txtDest);
-        addRow(card, gbc, 4, "Price", txtPrice);
-        addRow(card, gbc, 5, "Train Time", txtTime);
+        card.add(lblName, gbc);
 
-        // 🔵 ADD BUTTON
-        JButton btnAdd = new JButton("Add Train");
-        styleButton(btnAdd);
+        JTextField txtName =
+                new JTextField();
 
-        gbc.gridx = 0;
+        gbc.gridy = 2;
+
+        card.add(txtName, gbc);
+
+        // 🔹 SOURCE
+        JLabel lblSource =
+                new JLabel("Source");
+
+        gbc.gridy = 3;
+
+        card.add(lblSource, gbc);
+
+        JTextField txtSource =
+                new JTextField();
+
+        gbc.gridy = 4;
+
+        card.add(txtSource, gbc);
+
+        // 🔹 DESTINATION
+        JLabel lblDest =
+                new JLabel("Destination");
+
+        gbc.gridy = 5;
+
+        card.add(lblDest, gbc);
+
+        JTextField txtDest =
+                new JTextField();
+
         gbc.gridy = 6;
-        gbc.gridwidth = 2;
-        card.add(btnAdd, gbc);
 
-        // 🔙 BACK BUTTON
-        JButton btnBack = new JButton("Back");
+        card.add(txtDest, gbc);
+
+        // 🔹 PRICE
+        JLabel lblPrice =
+                new JLabel("Price");
 
         gbc.gridy = 7;
-        card.add(btnBack, gbc);
 
-        // 🔥 LOGIC
-        btnAdd.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+        card.add(lblPrice, gbc);
 
-                String name = txtName.getText();
-                String source = txtSource.getText();
-                String dest = txtDest.getText();
-                String priceText = txtPrice.getText();
-                String time = txtTime.getText();
+        JTextField txtPrice =
+                new JTextField();
 
-                if (name.equals("") || source.equals("") || dest.equals("") ||
-                        priceText.equals("") || time.equals("")) {
+        gbc.gridy = 8;
 
-                    JOptionPane.showMessageDialog(null, "Fill all fields");
-                } else {
-                    try {
-                        int price = Integer.parseInt(priceText);
+        card.add(txtPrice, gbc);
 
-                        java.sql.Connection con = DBConnection.getConnection();
+        // 🔹 TRAIN TIME
+        JLabel lblTime =
+                new JLabel("Train Time");
 
-                        java.sql.PreparedStatement ps = con.prepareStatement(
-                                "INSERT INTO trains(train_name, source, destination, price, train_time) VALUES (?, ?, ?, ?, ?)"
-                        );
+        gbc.gridy = 9;
 
-                        ps.setString(1, name);
-                        ps.setString(2, source);
-                        ps.setString(3, dest);
-                        ps.setInt(4, price);
-                        ps.setString(5, time);
+        card.add(lblTime, gbc);
 
-                        ps.executeUpdate();
+        JTextField txtTime =
+                new JTextField();
 
-                        JOptionPane.showMessageDialog(null, "Train Added Successfully");
+        gbc.gridy = 10;
 
-                        txtName.setText("");
-                        txtSource.setText("");
-                        txtDest.setText("");
-                        txtPrice.setText("");
-                        txtTime.setText("");
+        card.add(txtTime, gbc);
 
-                    } catch (Exception ex) {
-                        System.out.println(ex);
+        // 🔹 TOTAL SEATS
+        JLabel lblSeats =
+                new JLabel("Total Seats");
+
+        gbc.gridy = 11;
+
+        card.add(lblSeats, gbc);
+
+        JTextField txtSeats =
+                new JTextField();
+
+        gbc.gridy = 12;
+
+        card.add(txtSeats, gbc);
+
+        // 🔵 ADD BUTTON
+        JButton btnAdd =
+                new JButton("Add Train");
+
+        btnAdd.setBackground(
+                new Color(37, 99, 235)
+        );
+
+        btnAdd.setForeground(Color.WHITE);
+
+        btnAdd.setFocusPainted(false);
+
+        btnAdd.setOpaque(true);
+
+        btnAdd.setContentAreaFilled(true);
+
+        btnAdd.setBorderPainted(false);
+
+        gbc.gridy = 13;
+
+        card.add(btnAdd, gbc);
+
+        // 🔥 WRAPPER
+        JPanel wrapper = new JPanel();
+
+        wrapper.setLayout(
+                new BoxLayout(
+                        wrapper,
+                        BoxLayout.Y_AXIS
+                )
+        );
+
+        wrapper.setOpaque(false);
+
+        wrapper.add(card);
+
+        wrapper.add(
+                Box.createRigidArea(
+                        new Dimension(0, 10)
+                )
+        );
+
+        // 🔙 BACK BUTTON
+        JButton btnBack =
+                new JButton("Back");
+
+        btnBack.setMaximumSize(
+                new Dimension(200, 35)
+        );
+
+        btnBack.setAlignmentX(
+                Component.CENTER_ALIGNMENT
+        );
+
+        wrapper.add(btnBack);
+
+        main.add(wrapper);
+
+        // 🔥 ADD ACTION
+        btnAdd.addActionListener(
+                new ActionListener() {
+
+                    public void actionPerformed(
+                            ActionEvent e
+                    ) {
+
+                        try {
+
+                            String name =
+                                    txtName.getText();
+
+                            String source =
+                                    txtSource.getText();
+
+                            String dest =
+                                    txtDest.getText();
+
+                            String priceText =
+                                    txtPrice.getText();
+
+                            String time =
+                                    txtTime.getText();
+
+                            String seatsText =
+                                    txtSeats.getText();
+
+                            if (
+                                    name.equals("")
+                                            || source.equals("")
+                                            || dest.equals("")
+                                            || priceText.equals("")
+                                            || time.equals("")
+                                            || seatsText.equals("")
+                            ) {
+
+                                JOptionPane.showMessageDialog(
+                                        null,
+                                        "Fill all fields"
+                                );
+
+                                return;
+                            }
+
+                            int price =
+                                    Integer.parseInt(
+                                            priceText
+                                    );
+
+                            int seats =
+                                    Integer.parseInt(
+                                            seatsText
+                                    );
+
+                            java.sql.Connection con =
+                                    DBConnection.getConnection();
+
+                            java.sql.PreparedStatement ps =
+                                    con.prepareStatement(
+
+                                            "INSERT INTO trains(train_name, source, destination, price, train_time, total_seats, available_seats) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                                    );
+
+                            ps.setString(1, name);
+
+                            ps.setString(2, source);
+
+                            ps.setString(3, dest);
+
+                            ps.setInt(4, price);
+
+                            ps.setString(5, time);
+
+                            // ✅ TOTAL SEATS
+                            ps.setInt(6, seats);
+
+                            // ✅ AVAILABLE SEATS
+                            ps.setInt(7, seats);
+
+                            ps.executeUpdate();
+
+                            JOptionPane.showMessageDialog(
+                                    null,
+                                    "Train Added Successfully"
+                            );
+
+                            txtName.setText("");
+
+                            txtSource.setText("");
+
+                            txtDest.setText("");
+
+                            txtPrice.setText("");
+
+                            txtTime.setText("");
+
+                            txtSeats.setText("");
+
+                        } catch (Exception ex) {
+
+                            System.out.println(ex);
+                        }
                     }
                 }
-            }
-        });
+        );
 
-        btnBack.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new AdminDashboard().setVisible(true);
-                dispose();
-            }
-        });
-    }
+        // 🔙 BACK ACTION
+        btnBack.addActionListener(
+                new ActionListener() {
 
-    // 🔧 Helper for rows
-    private void addRow(JPanel panel, GridBagConstraints gbc, int y,
-                        String labelText, JTextField field) {
+                    public void actionPerformed(
+                            ActionEvent e
+                    ) {
 
-        gbc.gridy = y;
+                        new AdminDashboard()
+                                .setVisible(true);
 
-        // Label
-        gbc.gridx = 0;
-        gbc.weightx = 0.3;
-        panel.add(new JLabel(labelText), gbc);
-
-        // Field
-        gbc.gridx = 1;
-        gbc.weightx = 0.7;
-        field.setPreferredSize(new Dimension(200, 30));
-        panel.add(field, gbc);
-    }
-
-    // 🔧 Button styling
-    private void styleButton(JButton btn) {
-        btn.setBackground(new Color(37, 99, 235));
-        btn.setForeground(Color.WHITE);
-        btn.setFocusPainted(false);
-        btn.setOpaque(true);
-        btn.setContentAreaFilled(true);
-        btn.setBorderPainted(false);
+                        dispose();
+                    }
+                }
+        );
     }
 }
