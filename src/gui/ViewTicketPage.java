@@ -12,14 +12,10 @@ public class ViewTicketPage extends JFrame {
     public ViewTicketPage() {
 
         setTitle("My Tickets");
-
         setSize(800, 500);
-
         setLocationRelativeTo(null);
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 🔵 BACKGROUND
         JPanel main = new JPanel(new BorderLayout()) {
 
             protected void paintComponent(Graphics g) {
@@ -29,160 +25,110 @@ public class ViewTicketPage extends JFrame {
                 Graphics2D g2 = (Graphics2D) g;
 
                 GradientPaint gp = new GradientPaint(
-                        0,
-                        0,
-                        new Color(58, 123, 213),
-                        getWidth(),
-                        getHeight(),
+                        0, 0, new Color(58, 123, 213),
+                        getWidth(), getHeight(),
                         new Color(0, 210, 255)
                 );
 
                 g2.setPaint(gp);
-
-                g2.fillRect(
-                        0,
-                        0,
-                        getWidth(),
-                        getHeight()
-                );
+                g2.fillRect(0, 0, getWidth(), getHeight());
             }
         };
 
         add(main);
 
-        // 🔹 TITLE
-        JLabel title =
-                new JLabel(
-                        "My Tickets",
-                        SwingConstants.CENTER
-                );
-
-        title.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        22
-                )
+        JLabel title = new JLabel(
+                "My Tickets",
+                SwingConstants.CENTER
         );
+
+        title.setFont(new Font(
+                "Segoe UI",
+                Font.BOLD,
+                22
+        ));
 
         title.setForeground(Color.WHITE);
 
-        title.setBorder(
-                BorderFactory.createEmptyBorder(
-                        15,
-                        0,
-                        15,
-                        0
-                )
-        );
+        title.setBorder(BorderFactory.createEmptyBorder(
+                15, 0, 15, 0
+        ));
 
         main.add(title, BorderLayout.NORTH);
 
-        // 📜 LIST PANEL
         listPanel = new JPanel();
 
-        listPanel.setLayout(
-                new BoxLayout(
-                        listPanel,
-                        BoxLayout.Y_AXIS
-                )
-        );
+        listPanel.setLayout(new BoxLayout(
+                listPanel,
+                BoxLayout.Y_AXIS
+        ));
 
         listPanel.setBackground(Color.WHITE);
 
-        JScrollPane scroll =
-                new JScrollPane(listPanel);
+        JScrollPane scroll = new JScrollPane(listPanel);
 
         scroll.setBorder(null);
 
-        scroll.getVerticalScrollBar()
-                .setUnitIncrement(16);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
 
         main.add(scroll, BorderLayout.CENTER);
 
-        // 🔙 BOTTOM PANEL
         JPanel bottom = new JPanel();
 
-        bottom.setPreferredSize(
-                new Dimension(800, 70)
-        );
+        bottom.setPreferredSize(new Dimension(800, 70));
 
-        bottom.setBackground(
-                new Color(230, 240, 250)
-        );
+        bottom.setBackground(new Color(230, 240, 250));
 
-        JButton btnBack =
-                new JButton("Back");
+        JButton btnBack = new JButton("Back");
 
-        btnBack.setPreferredSize(
-                new Dimension(120, 35)
-        );
+        btnBack.setPreferredSize(new Dimension(120, 35));
 
-        btnBack.setBackground(
-                new Color(37, 99, 235)
-        );
+        btnBack.setBackground(new Color(37, 99, 235));
 
         btnBack.setForeground(Color.WHITE);
 
-        btnBack.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        14
-                )
-        );
+        btnBack.setFont(new Font(
+                "Segoe UI",
+                Font.BOLD,
+                14
+        ));
 
         btnBack.setFocusPainted(false);
-
         btnBack.setOpaque(true);
-
         btnBack.setContentAreaFilled(true);
-
         btnBack.setBorderPainted(false);
 
         bottom.add(btnBack);
 
         main.add(bottom, BorderLayout.SOUTH);
 
-        // 🔙 BACK ACTION
-        btnBack.addActionListener(
-                new ActionListener() {
+        btnBack.addActionListener(new ActionListener() {
 
-                    public void actionPerformed(
-                            ActionEvent e
-                    ) {
+            public void actionPerformed(ActionEvent e) {
 
-                        new Dashboard()
-                                .setVisible(true);
+                new Dashboard().setVisible(true);
 
-                        dispose();
-                    }
-                }
-        );
+                dispose();
+            }
+        });
 
         loadTickets();
     }
 
-    // 🔥 LOAD TICKETS
     void loadTickets() {
 
         try {
 
-            java.sql.Connection con =
-                    DBConnection.getConnection();
+            java.sql.Connection con = DBConnection.getConnection();
 
             java.sql.PreparedStatement ps =
                     con.prepareStatement(
                             "SELECT * FROM bookings WHERE username=?"
                     );
 
-            ps.setString(
-                    1,
-                    Dashboard.user
-            );
+            ps.setString(1, Dashboard.user);
 
-            java.sql.ResultSet rs =
-                    ps.executeQuery();
+            java.sql.ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
 
@@ -202,7 +148,6 @@ public class ViewTicketPage extends JFrame {
         }
     }
 
-    // 🎫 TICKET CARD
     void addTicketCard(
             String pnr,
             String train,
@@ -212,78 +157,51 @@ public class ViewTicketPage extends JFrame {
             String seatNumbers
     ) {
 
-        JPanel card =
-                new JPanel(new BorderLayout());
+        JPanel card = new JPanel(new BorderLayout());
 
-        card.setMaximumSize(
-                new Dimension(730, 250)
-        );
+        card.setMaximumSize(new Dimension(730, 250));
 
         card.setBackground(Color.WHITE);
 
-        card.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(220, 220, 220)
-                        ),
-                        BorderFactory.createEmptyBorder(
-                                15,
-                                20,
-                                15,
-                                20
-                        )
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(
+                        new Color(220, 220, 220)
+                ),
+                BorderFactory.createEmptyBorder(
+                        15, 20, 15, 20
                 )
-        );
+        ));
 
-        // 🔹 LEFT
         JPanel left = new JPanel();
 
-        left.setLayout(
-                new BoxLayout(
-                        left,
-                        BoxLayout.Y_AXIS
-                )
-        );
+        left.setLayout(new BoxLayout(
+                left,
+                BoxLayout.Y_AXIS
+        ));
 
         left.setOpaque(false);
 
-        JLabel lblTrain =
-                new JLabel(train);
+        JLabel lblTrain = new JLabel(train);
 
-        lblTrain.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        18
-                )
-        );
+        lblTrain.setFont(new Font(
+                "Segoe UI",
+                Font.BOLD,
+                18
+        ));
 
-        JLabel lblPNR =
-                new JLabel(
-                        "PNR: " + pnr
-                );
+        JLabel lblPNR = new JLabel("PNR: " + pnr);
 
         JLabel lblCategory =
-                new JLabel(
-                        "Category: " + category
-                );
+                new JLabel("Category: " + category);
 
-        JLabel lblDate =
-                new JLabel(
-                        "Date: " + date
-                );
+        JLabel lblDate = new JLabel("Date: " + date);
 
         JLabel lblSeats =
-                new JLabel(
-                        "Seats: " + seatNumbers
-                );
+                new JLabel("Seats: " + seatNumbers);
 
         JLabel lblStatus =
-                new JLabel(
-                        "Status: " + status
-                );
+                new JLabel("Status: " + status);
 
-        // 🎨 STATUS COLORS
         if (status.equals("Confirmed")) {
 
             lblStatus.setForeground(
@@ -302,60 +220,31 @@ public class ViewTicketPage extends JFrame {
         }
 
         left.add(lblTrain);
-
-        left.add(
-                Box.createRigidArea(
-                        new Dimension(0, 5)
-                )
-        );
+        left.add(Box.createRigidArea(new Dimension(0, 5)));
 
         left.add(lblPNR);
-
-        left.add(
-                Box.createRigidArea(
-                        new Dimension(0, 5)
-                )
-        );
+        left.add(Box.createRigidArea(new Dimension(0, 5)));
 
         left.add(lblCategory);
-
-        left.add(
-                Box.createRigidArea(
-                        new Dimension(0, 5)
-                )
-        );
+        left.add(Box.createRigidArea(new Dimension(0, 5)));
 
         left.add(lblDate);
-
-        left.add(
-                Box.createRigidArea(
-                        new Dimension(0, 5)
-                )
-        );
+        left.add(Box.createRigidArea(new Dimension(0, 5)));
 
         left.add(lblSeats);
-
-        left.add(
-                Box.createRigidArea(
-                        new Dimension(0, 5)
-                )
-        );
+        left.add(Box.createRigidArea(new Dimension(0, 5)));
 
         left.add(lblStatus);
 
-        // 🔹 RIGHT
         JPanel right = new JPanel();
 
-        right.setLayout(
-                new BoxLayout(
-                        right,
-                        BoxLayout.Y_AXIS
-                )
-        );
+        right.setLayout(new BoxLayout(
+                right,
+                BoxLayout.Y_AXIS
+        ));
 
         right.setOpaque(false);
 
-        // 🔵 DOWNLOAD BUTTON
         JButton btnDownload =
                 new JButton("Download Ticket");
 
@@ -373,23 +262,17 @@ public class ViewTicketPage extends JFrame {
 
         btnDownload.setForeground(Color.WHITE);
 
-        btnDownload.setFont(
-                new Font(
-                        "Segoe UI",
-                        Font.BOLD,
-                        14
-                )
-        );
+        btnDownload.setFont(new Font(
+                "Segoe UI",
+                Font.BOLD,
+                14
+        ));
 
         btnDownload.setFocusPainted(false);
-
         btnDownload.setOpaque(true);
-
         btnDownload.setContentAreaFilled(true);
-
         btnDownload.setBorderPainted(false);
 
-        // ❌ DISABLE FOR NON-CONFIRMED
         if (!status.equals("Confirmed")) {
 
             btnDownload.setEnabled(false);
@@ -401,83 +284,74 @@ public class ViewTicketPage extends JFrame {
 
         right.add(btnDownload);
 
-        // 🔥 DOWNLOAD ACTION
-        btnDownload.addActionListener(
-                new ActionListener() {
+        btnDownload.addActionListener(new ActionListener() {
 
-                    public void actionPerformed(
-                            ActionEvent e
-                    ) {
+            public void actionPerformed(ActionEvent e) {
 
-                        try {
+                try {
 
-                            String fileName =
-                                    "ticket_" + pnr + ".txt";
+                    String fileName =
+                            "ticket_" + pnr + ".txt";
 
-                            FileWriter fw =
-                                    new FileWriter(fileName);
+                    FileWriter fw =
+                            new FileWriter(fileName);
 
-                            fw.write(
-                                    "========== RAILWAY TICKET ==========\n\n"
-                            );
+                    fw.write(
+                            "========== RAILWAY TICKET ==========\n\n"
+                    );
 
-                            fw.write(
-                                    "PNR: " + pnr + "\n"
-                            );
+                    fw.write("PNR: " + pnr + "\n");
 
-                            fw.write(
-                                    "Passenger: "
-                                            + Dashboard.user
-                                            + "\n"
-                            );
+                    fw.write(
+                            "Passenger: "
+                                    + Dashboard.user
+                                    + "\n"
+                    );
 
-                            fw.write(
-                                    "Train: " + train + "\n"
-                            );
+                    fw.write("Train: " + train + "\n");
 
-                            fw.write(
-                                    "Category: "
-                                            + category
-                                            + "\n"
-                            );
+                    fw.write(
+                            "Category: "
+                                    + category
+                                    + "\n"
+                    );
 
-                            fw.write(
-                                    "Journey Date: "
-                                            + date
-                                            + "\n"
-                            );
+                    fw.write(
+                            "Journey Date: "
+                                    + date
+                                    + "\n"
+                    );
 
-                            fw.write(
-                                    "Seats: "
-                                            + seatNumbers
-                                            + "\n"
-                            );
+                    fw.write(
+                            "Seats: "
+                                    + seatNumbers
+                                    + "\n"
+                    );
 
-                            fw.write(
-                                    "Status: "
-                                            + status
-                                            + "\n\n"
-                            );
+                    fw.write(
+                            "Status: "
+                                    + status
+                                    + "\n\n"
+                    );
 
-                            fw.write(
-                                    "==================================="
-                            );
+                    fw.write(
+                            "==================================="
+                    );
 
-                            fw.close();
+                    fw.close();
 
-                            JOptionPane.showMessageDialog(
-                                    null,
-                                    "Ticket Downloaded\n\nSaved as:\n"
-                                            + fileName
-                            );
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Ticket Downloaded\n\nSaved as:\n"
+                                    + fileName
+                    );
 
-                        } catch (Exception ex) {
+                } catch (Exception ex) {
 
-                            System.out.println(ex);
-                        }
-                    }
+                    System.out.println(ex);
                 }
-        );
+            }
+        });
 
         card.add(left, BorderLayout.WEST);
 
@@ -485,10 +359,8 @@ public class ViewTicketPage extends JFrame {
 
         listPanel.add(card);
 
-        listPanel.add(
-                Box.createRigidArea(
-                        new Dimension(0, 12)
-                )
-        );
+        listPanel.add(Box.createRigidArea(
+                new Dimension(0, 12)
+        ));
     }
 }

@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class DeleteTrainPage extends JFrame {
 
@@ -14,8 +15,11 @@ public class DeleteTrainPage extends JFrame {
         setLocationRelativeTo(null);
 
         JPanel main = new JPanel(new BorderLayout()) {
+
             protected void paintComponent(Graphics g) {
+
                 super.paintComponent(g);
+
                 Graphics2D g2 = (Graphics2D) g;
 
                 GradientPaint gp = new GradientPaint(
@@ -31,34 +35,44 @@ public class DeleteTrainPage extends JFrame {
         add(main);
 
         JLabel title = new JLabel("Delete Trains", SwingConstants.CENTER);
+
         title.setFont(new Font("Segoe UI", Font.BOLD, 20));
         title.setForeground(Color.WHITE);
 
         main.add(title, BorderLayout.NORTH);
 
         listPanel = new JPanel();
+
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
         listPanel.setOpaque(false);
 
         JScrollPane scroll = new JScrollPane(listPanel);
+
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
 
         main.add(scroll, BorderLayout.CENTER);
 
         JButton btnBack = new JButton("Back");
+
         btnBack.setBackground(new Color(37, 99, 235));
         btnBack.setForeground(Color.WHITE);
 
         JPanel bottom = new JPanel();
+
         bottom.setOpaque(false);
         bottom.add(btnBack);
 
         main.add(bottom, BorderLayout.SOUTH);
 
-        btnBack.addActionListener(e -> {
-            new AdminDashboard().setVisible(true);
-            dispose();
+        btnBack.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                new AdminDashboard().setVisible(true);
+
+                dispose();
+            }
         });
 
         loadTrains();
@@ -67,9 +81,12 @@ public class DeleteTrainPage extends JFrame {
     void loadTrains() {
 
         try {
+
             java.sql.Connection con = DBConnection.getConnection();
 
-            java.sql.PreparedStatement ps = con.prepareStatement("SELECT * FROM trains");
+            java.sql.PreparedStatement ps =
+                    con.prepareStatement("SELECT * FROM trains");
+
             java.sql.ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -82,6 +99,7 @@ public class DeleteTrainPage extends JFrame {
             }
 
         } catch (Exception e) {
+
             System.out.println(e);
         }
     }
@@ -89,18 +107,28 @@ public class DeleteTrainPage extends JFrame {
     void addCard(String name, String source, String dest) {
 
         JPanel card = new JPanel(new BorderLayout());
+
         card.setMaximumSize(new Dimension(700, 100));
         card.setBackground(Color.WHITE);
+
         card.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        JLabel lbl = new JLabel("<html><b>" + name + "</b><br>" + source + " → " + dest + "</html>");
+        JLabel lbl = new JLabel(
+                "<html><b>" + name + "</b><br>"
+                        + source + " → " + dest + "</html>"
+        );
 
         JButton btnDelete = new JButton("Delete");
+
         btnDelete.setBackground(Color.RED);
         btnDelete.setForeground(Color.WHITE);
 
-        btnDelete.addActionListener(e -> {
-            deleteTrain(name);
+        btnDelete.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                deleteTrain(name);
+            }
         });
 
         card.add(lbl, BorderLayout.WEST);
@@ -113,21 +141,24 @@ public class DeleteTrainPage extends JFrame {
     void deleteTrain(String name) {
 
         try {
+
             java.sql.Connection con = DBConnection.getConnection();
 
-            java.sql.PreparedStatement ps = con.prepareStatement(
-                    "DELETE FROM trains WHERE train_name=?"
-            );
+            java.sql.PreparedStatement ps =
+                    con.prepareStatement("DELETE FROM trains WHERE train_name=?");
 
             ps.setString(1, name);
+
             ps.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Train Deleted");
 
             new DeleteTrainPage().setVisible(true);
+
             dispose();
 
         } catch (Exception e) {
+
             System.out.println(e);
         }
     }

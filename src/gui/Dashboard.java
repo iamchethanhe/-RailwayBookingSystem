@@ -11,14 +11,16 @@ public class Dashboard extends JFrame {
     public Dashboard() {
 
         setTitle("Dashboard");
-        setSize(800, 500); // ✅ same as login
+        setSize(800, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 🔵 GRADIENT BACKGROUND (same as login)
         JPanel main = new JPanel() {
+
             protected void paintComponent(Graphics g) {
+
                 super.paintComponent(g);
+
                 Graphics2D g2 = (Graphics2D) g;
 
                 GradientPaint gp = new GradientPaint(
@@ -32,10 +34,11 @@ public class Dashboard extends JFrame {
         };
 
         main.setLayout(new GridBagLayout());
+
         add(main);
 
-        // ⚪ CARD PANEL
         JPanel card = new JPanel();
+
         card.setPreferredSize(new Dimension(360, 300));
         card.setBackground(Color.WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -43,24 +46,21 @@ public class Dashboard extends JFrame {
 
         main.add(card);
 
-        // 🔹 TITLE
         JLabel title = new JLabel("Welcome, " + user);
+
         title.setFont(new Font("Segoe UI", Font.BOLD, 20));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // 🔵 BUTTON STYLE METHOD
         Dimension btnSize = new Dimension(260, 40);
 
         JButton btnSearch = new JButton("Search Trains");
-        styleButton(btnSearch, btnSize);
-
         JButton btnTickets = new JButton("My Tickets");
-        styleButton(btnTickets, btnSize);
-
         JButton btnLogout = new JButton("Logout");
+
+        styleButton(btnSearch, btnSize);
+        styleButton(btnTickets, btnSize);
         styleButton(btnLogout, btnSize);
 
-        // 📦 ADD COMPONENTS
         card.add(title);
         card.add(Box.createRigidArea(new Dimension(0, 25)));
 
@@ -72,25 +72,39 @@ public class Dashboard extends JFrame {
 
         card.add(btnLogout);
 
-        // 🔥 ACTIONS (same logic)
-        btnSearch.addActionListener(e -> {
-            new SearchTrainPage().setVisible(true);
-            dispose();
+        btnSearch.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                new SearchTrainPage().setVisible(true);
+
+                dispose();
+            }
         });
 
-        btnTickets.addActionListener(e -> {
-            new ViewTicketPage().setVisible(true);
-            dispose();
+        btnTickets.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                new ViewTicketPage().setVisible(true);
+
+                dispose();
+            }
         });
 
-        btnLogout.addActionListener(e -> {
-            new LoginPage().setVisible(true);
-            dispose();
+        btnLogout.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                new LoginPage().setVisible(true);
+
+                dispose();
+            }
         });
     }
 
-    // 🔥 BUTTON STYLE (same as login)
     private void styleButton(JButton btn, Dimension size) {
+
         btn.setMaximumSize(size);
         btn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
